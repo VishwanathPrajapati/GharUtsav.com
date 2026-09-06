@@ -59,42 +59,9 @@
             font-weight: bold;
         }
 
-        /* पीली API Key वाली पट्टी */
+        /* पीली API Key वाली पट्टी को पूरी तरह छुपा दिया गया है क्योंकि चाबी कोडिंग में फिट है */
         .api-section { 
-            background-color: #fff9db; 
-            padding: 12px 15px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between;
-            border-bottom: 1px solid #ccc;
-            gap: 10px;
-        }
-        
-        .api-label {
-            font-size: 14px;
-            font-weight: bold;
-            color: #333333;
-            white-space: nowrap;
-        }
-
-        .api-input-box {
-            flex: 1;
-            padding: 10px;
-            border: 2px solid #b0bec5;
-            border-radius: 6px;
-            font-size: 15px;
-            background-color: #ffffff;
-        }
-
-        .save-btn { 
-            background-color: #000080; 
-            color: white; 
-            border: none; 
-            padding: 10px 22px; 
-            font-size: 15px; 
-            border-radius: 6px; 
-            cursor: pointer;
-            font-weight: bold;
+            display: none !important;
         }
 
         /* निर्माता क्रेडिट लाइन */
@@ -265,11 +232,9 @@
             <button id="changeNameBtn" class="change-name-btn">नाम बदलें</button>
         </div>
         
-        <!-- पीली पट्टी -->
+        <!-- पीली पट्टी (छिपी हुई) -->
         <div class="api-section">
-            <div class="api-label">🔑 Gemini API Key:</div>
-            <input type="text" id="apiKeyInput" class="api-input-box" placeholder="यहाँ अपनी API Key पेस्ट करें...">
-            <button id="saveBtn" class="save-btn">सेव</button>
+            <input type="text" id="apiKeyInput" value="">
         </div>
 
         <!-- निर्माता क्रेडिट लाइन -->
@@ -306,8 +271,6 @@
     </div>
 
     <script>
-        const apiKeyInput = document.getElementById('apiKeyInput');
-        const saveBtn = document.getElementById('saveBtn');
         const chatInput = document.getElementById('chatInput');
         const sendBtn = document.getElementById('sendBtn');
         const chatWindow = document.getElementById('chatWindow');
@@ -322,3 +285,32 @@
         const previewContainer = document.getElementById('previewContainer');
         const imagePreview = document.getElementById('imagePreview');
         const enhanceBtn = document.getElementById('enhanceBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        let registeredName = "Sulabh kumar"; 
+        
+        // 🌟 आपकी सही चाबी को सीधे कोडिंग के अंदर सुरक्षित फिट कर दिया गया है
+        const finalMasterKey = "AIzaSyC_9vIivogvWwYJEeFesxSFxLtc98I3bg"; 
+
+        window.addEventListener('load', () => {
+            const savedName = localStorage.getItem('bharta_ai_user_name');
+            if (savedName) registeredName = savedName;
+            showWelcomeMessage();
+        });
+
+        chatTab.addEventListener('click', () => {
+            chatTab.classList.add('active');
+            photoTab.classList.remove('active');
+            chatWindow.classList.remove('hidden');
+            inputSection.classList.remove('hidden');
+            photoSection.classList.add('hidden');
+        });
+
+        photoTab.addEventListener('click', () => {
+            photoTab.classList.add('active');
+            chatTab.classList.remove('active');
+            chatWindow.classList.add('hidden');
+            inputSection.classList.add('hidden');
+            photoSection.classList.remove('hidden');
+        });
+
