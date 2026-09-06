@@ -59,11 +59,6 @@
             font-weight: bold;
         }
 
-        /* पीली API Key वाली पट्टी को पूरी तरह छुपा दिया गया है क्योंकि चाबी कोडिंग में फिट है */
-        .api-section { 
-            display: none !important;
-        }
-
         /* निर्माता क्रेडिट लाइन */
         .creator-text {
             text-align: center;
@@ -231,11 +226,6 @@
             <h2 class="banner-title">🇮🇳 मेरा भारत AI असिस्टेंट 🇮🇳</h2>
             <button id="changeNameBtn" class="change-name-btn">नाम बदलें</button>
         </div>
-        
-        <!-- पीली पट्टी (छिपी हुई) -->
-        <div class="api-section">
-            <input type="text" id="apiKeyInput" value="">
-        </div>
 
         <!-- निर्माता क्रेडिट लाइन -->
         <div class="creator-text">इसके निर्माता सुलभ कुमार हैं</div>
@@ -289,7 +279,7 @@
 
         let registeredName = "Sulabh kumar"; 
         
-        // 🌟 आपकी सही चाबी को सीधे कोडिंग के अंदर सुरक्षित फिट कर दिया गया है
+        // सुरक्षित मास्टर API Key सीधे फिट है
         const finalMasterKey = "AIzaSyC_9vIivogvWwYJEeFesxSFxLtc98I3bg"; 
 
         window.addEventListener('load', () => {
@@ -314,3 +304,10 @@
             photoSection.classList.remove('hidden');
         });
 
+        changeNameBtn.addEventListener('click', () => {
+            const newName = prompt("अपना नया नाम लिखें:", registeredName);
+            if (newName && newName.trim() !== "") {
+                registeredName = newName.trim();
+                localStorage.setItem('bharta_ai_user_name', registeredName);
+                showWelcomeMessage();
+            }
