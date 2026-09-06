@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>मेरा भारत AI असिस्टेंट & HD फोटो टूल</title>
-    <!-- आधिकारिक Gemini स्क्रिप्ट -->
-    <script src="https://unpkg.com"></script>
     <style>
         * { box-sizing: border-box; }
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f7f9fb; display: flex; flex-direction: column; min-height: 100vh; }
@@ -21,19 +19,15 @@
         .msg { padding: 12px 16px; border-radius: 14px; max-width: 80%; font-size: 16px; line-height: 1.4; }
         .ai-msg { background-color: #ffffff; color: #000000; align-self: flex-start; border: 1px solid #e0e0e0; }
         .user-msg { background-color: #000080; color: #ffffff; align-self: flex-end; }
-        
         .photo-section { flex: 1; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 20px; background: #ffffff; height: 55vh; overflow-y: auto; }
         .upload-box { border: 2px dashed #b0bec5; padding: 30px; border-radius: 12px; text-align: center; width: 100%; background: #fafafa; cursor: pointer; }
         .preview-container { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
         .preview-img { max-width: 100%; max-height: 250px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .enhance-btn { background-color: #ff9933; color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; }
         .download-btn { background-color: #128807; color: white; border: none; padding: 10px 20px; font-size: 15px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 5px; }
-        
         .input-section { padding: 15px; display: flex; gap: 10px; align-items: center; background-color: #ffffff; border-top: 1px solid #eaeaea; }
         .chat-input { flex: 1; padding: 12px 20px; border: 1px solid #ccc; border-radius: 25px; font-size: 16px; outline: none; }
-        
-        /* बटन स्टाइल जिसमें ब्लू कलर ब्लॉक न हो */
-        .send-btn { background-color: #008000; color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 25px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        .send-btn { background-color: #008000; color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 25px; cursor: pointer; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -49,7 +43,6 @@
             <button id="photoTab" class="tab-btn">✨ AI फोटो HD मेकर</button>
         </div>
         <div id="chatWindow" class="chat-window"></div>
-        
         <div id="photoSection" class="photo-section hidden">
             <div class="upload-box" onclick="document.getElementById('fileInput').click()">
                 <p style="margin:0; color:#555; font-weight:bold;">📸 फोटो अपलोड करने के लिए यहाँ क्लिक करें</p>
@@ -62,7 +55,6 @@
                 <button id="downloadBtn" class="download-btn hidden">📥 HD फोटो डाउनलोड करें</button>
             </div>
         </div>
-        
         <div id="inputSection" class="input-section">
             <input type="text" id="chatInput" class="chat-input" placeholder="यहाँ अपना सवाल लिखें...">
             <button id="sendBtn" class="send-btn">भेजें</button>
@@ -86,20 +78,10 @@
 
         let registeredName = "Sulabh kumar"; 
         const finalMasterKey = "AIzaSyC_9vIivogvWwYJEeFesxSFxLtc98I3bg"; 
-        let genAI = null;
-        let model = null;
 
         window.addEventListener('load', () => {
             const savedName = localStorage.getItem('bharta_ai_user_name');
             if (savedName) registeredName = savedName;
-            
-            try {
-                if (window.GoogleGenerativeAI) {
-                    genAI = new window.GoogleGenerativeAI.GoogleGenerativeAI(finalMasterKey);
-                    model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-                }
-            } catch (e) { console.error(e); }
-            
             showWelcomeMessage();
         });
 
@@ -129,39 +111,48 @@
             appendMessage('AI', `नमस्ते ${registeredName}, वेलकम टू माई एआई! प्रणाम! मैं आपका अपना भारतीय AI दोस्त हूँ। आपका असिस्टेंट पूरी तरह तैयार है, नीचे अपना सवाल पूछें।`);
         }
 
-        // 🌟 सुपर फिक्स्ड आस्किंग फंक्शन (मोबाइल्स के लिए विशेष रूप से अपग्रेड किया हुआ)
+        // 🌟 बिल्कुल डायरेक्ट और 100% फुल-प्रूफ क्लीन फेच मेथड
         async function askGemini() {
-            // मोबाइल इनपुट की डायरेक्ट वैल्यू उठाना
-            const inputEl = document.getElementById('chatInput');
-            const userMessage = inputEl.value ? inputEl.value.trim() : "";
-            
-            if (!userMessage || userMessage === "") {
-                alert("कृपया पहले बॉक्स में कुछ टाइप करें!");
-                return;
-            }
+            const userMessage = chatInput.value.trim();
+            if (!userMessage) return;
 
             try {
+                // मैसेज को तुरंत स्क्रीन पर जोड़ें ताकि पता चले बटन दब गया है
                 appendMessage('User', userMessage);
-                inputEl.value = ''; // बॉक्स खाली करें
+                chatInput.value = '';
 
-                if (!model) {
-                    appendMessage('AI', "सिस्टम री-लोड हो रहा है, कृपया 1 सेकंड बाद दोबारा 'भेजें' दबाएं।");
-                    // दोबारा इनिशियलाइज करने की कोशिश करें
-                    if (window.GoogleGenerativeAI) {
-                        genAI = new window.GoogleGenerativeAI.GoogleGenerativeAI(finalMasterKey);
-                        model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-                    }
-                    return;
-                }
+                const url = `https://googleapis.com{finalMasterKey}`;
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: userMessage }] }] })
+                });
 
-                const result = await model.generateContent(userMessage);
-                const response = await result.response;
-                const text = response.text();
-
-                if (text) {
-                    appendMessage('AI', text);
+                const data = await response.json();
+                
+                // डेटा रिस्पॉन्स पढ़ने का बिल्कुल पक्का और साफ रास्ता
+                if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
+                    appendMessage('AI', data.candidates[0].content.parts[0].text);
+                } else if (data.error) {
+                    appendMessage('AI', "गूगल सर्वर एरर: " + data.error.message);
                 } else {
-                    appendMessage('AI', "माफ करना भाई, कोई जवाब नहीं मिला।");
+                    appendMessage('AI', "माफ करना भाई, रिस्पॉन्स सही फॉर्मेट में नहीं मिला।");
                 }
             } catch (error) {
                 console.error(error);
+                appendMessage('AI', "नेटवर्क एरर! कृपया इंटरनेट दोबारा चेक करें।");
+            }
+        }
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files;
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    imagePreview.src = event.target.result;
+                    previewContainer.classList.remove('hidden');
+                    downloadBtn.classList.add('hidden');
+                    imagePreview.style.filter = "none"; 
+                    enhanceBtn.innerText = "🪄 AI से फोटो को HD बनाएं";
+                }
