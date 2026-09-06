@@ -21,15 +21,19 @@
         .msg { padding: 12px 16px; border-radius: 14px; max-width: 80%; font-size: 16px; line-height: 1.4; }
         .ai-msg { background-color: #ffffff; color: #000000; align-self: flex-start; border: 1px solid #e0e0e0; }
         .user-msg { background-color: #000080; color: #ffffff; align-self: flex-end; }
+        
         .photo-section { flex: 1; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 20px; background: #ffffff; height: 55vh; overflow-y: auto; }
         .upload-box { border: 2px dashed #b0bec5; padding: 30px; border-radius: 12px; text-align: center; width: 100%; background: #fafafa; cursor: pointer; }
         .preview-container { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
         .preview-img { max-width: 100%; max-height: 250px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .enhance-btn { background-color: #ff9933; color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; }
         .download-btn { background-color: #128807; color: white; border: none; padding: 10px 20px; font-size: 15px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 5px; }
+        
         .input-section { padding: 15px; display: flex; gap: 10px; align-items: center; background-color: #ffffff; border-top: 1px solid #eaeaea; }
         .chat-input { flex: 1; padding: 12px 20px; border: 1px solid #ccc; border-radius: 25px; font-size: 16px; outline: none; }
-        .send-btn { background-color: #008000; color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 25px; cursor: pointer; }
+        
+        /* बटन स्टाइल जिसमें ब्लू कलर ब्लॉक न हो */
+        .send-btn { background-color: #008000; color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 25px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -45,6 +49,7 @@
             <button id="photoTab" class="tab-btn">✨ AI फोटो HD मेकर</button>
         </div>
         <div id="chatWindow" class="chat-window"></div>
+        
         <div id="photoSection" class="photo-section hidden">
             <div class="upload-box" onclick="document.getElementById('fileInput').click()">
                 <p style="margin:0; color:#555; font-weight:bold;">📸 फोटो अपलोड करने के लिए यहाँ क्लिक करें</p>
@@ -57,6 +62,7 @@
                 <button id="downloadBtn" class="download-btn hidden">📥 HD फोटो डाउनलोड करें</button>
             </div>
         </div>
+        
         <div id="inputSection" class="input-section">
             <input type="text" id="chatInput" class="chat-input" placeholder="यहाँ अपना सवाल लिखें...">
             <button id="sendBtn" class="send-btn">भेजें</button>
@@ -123,17 +129,28 @@
             appendMessage('AI', `नमस्ते ${registeredName}, वेलकम टू माई एआई! प्रणाम! मैं आपका अपना भारतीय AI दोस्त हूँ। आपका असिस्टेंट पूरी तरह तैयार है, नीचे अपना सवाल पूछें।`);
         }
 
-        // बिल्कुल क्लीन और फिक्स्ड आस्किंग फंक्शन
+        // 🌟 सुपर फिक्स्ड आस्किंग फंक्शन (मोबाइल्स के लिए विशेष रूप से अपग्रेड किया हुआ)
         async function askGemini() {
-            const userMessage = chatInput.value.trim();
-            if (!userMessage) return;
+            // मोबाइल इनपुट की डायरेक्ट वैल्यू उठाना
+            const inputEl = document.getElementById('chatInput');
+            const userMessage = inputEl.value ? inputEl.value.trim() : "";
+            
+            if (!userMessage || userMessage === "") {
+                alert("कृपया पहले बॉक्स में कुछ टाइप करें!");
+                return;
+            }
 
             try {
                 appendMessage('User', userMessage);
-                chatInput.value = '';
+                inputEl.value = ''; // बॉक्स खाली करें
 
                 if (!model) {
-                    appendMessage('AI', "सिस्टम लोड हो रहा है, कृपया दोबारा प्रयास करें।");
+                    appendMessage('AI', "सिस्टम री-लोड हो रहा है, कृपया 1 सेकंड बाद दोबारा 'भेजें' दबाएं।");
+                    // दोबारा इनिशियलाइज करने की कोशिश करें
+                    if (window.GoogleGenerativeAI) {
+                        genAI = new window.GoogleGenerativeAI.GoogleGenerativeAI(finalMasterKey);
+                        model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+                    }
                     return;
                 }
 
@@ -144,27 +161,7 @@
                 if (text) {
                     appendMessage('AI', text);
                 } else {
-                    appendMessage('AI', "माफ करना भाई, रिस्पॉन्स खाली मिला।");
+                    appendMessage('AI', "माफ करना भाई, कोई जवाब नहीं मिला।");
                 }
             } catch (error) {
                 console.error(error);
-                appendMessage('AI', "त्रुटि! कृपया इंटरनेट कनेक्शन की जांच करें।");
-            }
-        }
-
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    imagePreview.src = event.target.result;
-                    previewContainer.classList.remove('hidden');
-                    downloadBtn.classList.add('hidden');
-                    imagePreview.style.filter = "none"; 
-                    enhanceBtn.innerText = "🪄 AI से फोटो को HD बनाएं";
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-
-        enhanceBtn.addEventListener('click', () => {
