@@ -1,13 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>मेरा भारत AI असिस्टेंट</title>
-    
-    <!-- सबसे मजबूत लोड होने वाली Gemini UMD स्क्रिप्ट -->
-    <script src="https://unpkg.com"></script>
 
     <style>
         * { box-sizing: border-box; }
@@ -31,7 +27,7 @@
             background-color: #ffffff;
         }
 
-        /* 1. फोटो जैसी हूबहू तिरंगा ऊपर की पट्टी */
+        /* तिरंगा ऊपर की पट्टी */
         .top-banner {
             background: linear-gradient(to right, #ff9933 0%, #ff9933 33%, #ffffff 33%, #ffffff 66%, #128807 66%, #128807 100%);
             padding: 12px 15px;
@@ -51,7 +47,6 @@
             gap: 5px;
         }
 
-        /* फोटो जैसा गहरा नीला 'नाम बदलें' बटन */
         .change-name-btn {
             background-color: #000080;
             color: white;
@@ -63,7 +58,7 @@
             font-weight: bold;
         }
 
-        /* 2. फोटो जैसी हूबहू पीली API Key वाली पट्टी */
+        /* पीली API Key वाली पट्टी */
         .api-section { 
             background-color: #fff9db; 
             padding: 10px 15px; 
@@ -90,7 +85,7 @@
             background-color: #ffffff;
         }
 
-        /* फोटो जैसा गहरा नीला 'सेव' बटन */
+        /* गहरा नीला 'सेव' बटन */
         .save-btn { 
             background-color: #000080; 
             color: white; 
@@ -102,7 +97,7 @@
             font-weight: bold;
         }
 
-        /* निर्माता क्रेडिट लाइन जो ठीक पीली पट्टी के नीचे दिखेगी */
+        /* निर्माता क्रेडिट लाइन */
         .creator-text {
             text-align: center;
             font-size: 14px;
@@ -114,7 +109,7 @@
             border-bottom: 1px solid #e0e0e0;
         }
 
-        /* 3. फोटो जैसी मुख्य चैट विंडो */
+        /* मुख्य चैट विंडो */
         .chat-window { 
             flex: 1; 
             padding: 15px; 
@@ -126,7 +121,6 @@
             height: 60vh;
         }
 
-        /* फोटो जैसे ही गोल कोनों वाले चैट बबल्स */
         .msg { 
             padding: 12px 16px; 
             border-radius: 14px; 
@@ -135,7 +129,6 @@
             line-height: 1.4;
         }
         
-        /* एआई का मेसेज (सफेद बैकग्राउंड और धूसर बॉर्डर) */
         .ai-msg { 
             background-color: #ffffff; 
             color: #000000; 
@@ -143,14 +136,13 @@
             border: 1px solid #e0e0e0;
         }
         
-        /* यूजर का मेसेज (फोटो जैसा गहरा नीला बैकग्राउंड) */
         .user-msg { 
             background-color: #000080; 
             color: #ffffff; 
             align-self: flex-end; 
         }
 
-        /* 4. फोटो जैसा निचला इनपुट हिस्सा */
+        /* निचला इनपुट हिस्सा */
         .input-section { 
             padding: 15px; 
             display: flex; 
@@ -160,7 +152,6 @@
             border-top: 1px solid #eaeaea;
         }
 
-        /* गोल कोनों वाला सवाल लिखने का बॉक्स */
         .chat-input { 
             flex: 1; 
             padding: 12px 20px; 
@@ -170,7 +161,6 @@
             outline: none;
         }
 
-        /* फोटो जैसा गोल हरा 'भेजें' बटन */
         .send-btn { 
             background-color: #008000; 
             color: white; 
@@ -186,7 +176,6 @@
 <body>
 
     <div class="container">
-        
         <!-- तिरंगा ऊपर की पट्टी -->
         <div class="top-banner">
             <h2 class="banner-title">🇮🇳 मेरा भारत AI असिस्टेंट 🇮🇳</h2>
@@ -200,7 +189,7 @@
             <button id="saveBtn" class="save-btn">सेव</button>
         </div>
 
-        <!-- इसके निर्माता सुलभ कुमार हैं -->
+        <!-- निर्माता क्रेडिट लाइन -->
         <div class="creator-text">इसके निर्माता सुलभ कुमार हैं</div>
 
         <!-- चैट विंडो -->
@@ -221,9 +210,7 @@
         const chatWindow = document.getElementById('chatWindow');
         const changeNameBtn = document.getElementById('changeNameBtn');
 
-        let genAI = null;
-        let model = null;
-        let registeredName = "Sulabh kumar"; // शुरुआत में डिफॉल्ट नाम
+        let registeredName = "Sulabh kumar"; 
 
         window.addEventListener('load', () => {
             const savedName = localStorage.getItem('bharta_ai_user_name');
@@ -237,20 +224,10 @@
 
             if (savedKey) {
                 apiKeyInput.value = savedKey;
-                initializeAPI(savedKey);
             }
 
             showWelcomeMessage();
         });
-
-        function initializeAPI(key) {
-            try {
-                genAI = new GoogleGenerativeAI.GoogleGenerativeAI(key);
-                model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-            } catch (e) {
-                console.error(e);
-            }
-        }
 
         changeNameBtn.addEventListener('click', () => {
             const newName = prompt("अपना नया नाम लिखें:", registeredName);
@@ -261,13 +238,12 @@
             }
         });
 
-        // फोटो में लिखा हुआ हूबहू सटीक पहला मैसेज
         function showWelcomeMessage() {
             chatWindow.innerHTML = "";
             appendMessage('AI', `नमस्ते ${registeredName}, वेलकम टू माई एआई! प्रणाम! मैं आपका अपना भारतीय AI दोस्त हूँ। ऊपर अपनी नई चाबी पेस्ट करके 'सेव' दबाएं, फिर नीचे सवाल पूछें।`);
         }
 
-        // 'सेव' बटन का एकदम सही काम करने वाला फंक्शन
+        // नया सुपर-फास्ट सेव फंक्शन
         saveBtn.addEventListener('click', () => {
             const key = apiKeyInput.value.trim();
             if (!key) {
@@ -275,15 +251,16 @@
                 return;
             }
             localStorage.setItem('gemini_api_key', key);
-            initializeAPI(key);
             alert("API Key सफलतापूर्वक सेव हो गई है! 🎉");
         });
 
+        // डायरेक्ट API फेच मेथड (बिना किसी लोडिंग एरर के)
         async function askGemini() {
             const userMessage = chatInput.value.trim();
             if (!userMessage) return;
 
-            if (!model) {
+            const savedKey = localStorage.getItem('gemini_api_key');
+            if (!savedKey) {
                 appendMessage('AI', "माफ करना भाई, कुछ गड़बड़ हो गई। ऊपर अपनी सही चाबी दोबारा डालकर 'सेव' बटन दबाएं!");
                 return;
             }
@@ -292,9 +269,22 @@
                 appendMessage('User', userMessage);
                 chatInput.value = '';
 
-                const result = await model.generateContent(userMessage);
-                const response = await result.response;
-                appendMessage('AI', response.text());
+                // बिना किसी बाहरी लाइब्रेरी के डायरेक्ट Google API को कॉल करना
+                const url = `https://googleapis.com{savedKey}`;
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/center-box; charset=UTF-8' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: userMessage }] }] })
+                });
+
+                const data = await response.json();
+                
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    appendMessage('AI', data.candidates[0].content.parts[0].text);
+                } else {
+                    appendMessage('AI', "माफ करना भाई, कुछ गड़बड़ हो गई। ऊपर अपनी सही चाबी दोबारा डालकर 'सेव' बटन दबाएं!");
+                }
 
             } catch (error) {
                 appendMessage('AI', "माफ करना भाई, कुछ गड़बड़ हो गई। ऊपर अपनी सही चाबी दोबारा डालकर 'सेव' बटन दबाएं!");
@@ -312,3 +302,10 @@
             if (sender === 'AI') {
                 msgDiv.classList.add('ai-msg');
                 msgDiv.innerHTML = text;
+            } else {
+                msgDiv.classList.add('user-msg');
+                msgDiv.innerHTML = text;
+            }
+            chatWindow.appendChild(msgDiv);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
