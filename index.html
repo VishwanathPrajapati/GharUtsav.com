@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -5,16 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>मेरा भारत AI असिस्टेंट</title>
     
-    <!-- Gemini SDK लाइब्रेरी -->
-    <script type="importmap">
-      {
-        "imports": {
-          "@google/generative-ai": "https://esm.run"
-        }
-      }
-    </script>
+    <!-- सबसे मजबूत लोड होने वाली Gemini UMD स्क्रिप्ट -->
+    <script src="https://unpkg.com"></script>
 
     <style>
+        * { box-sizing: border-box; }
         body { 
             font-family: Arial, sans-serif; 
             margin: 0; 
@@ -32,31 +28,30 @@
             display: flex;
             flex-direction: column;
             flex: 1;
-            box-sizing: border-box;
+            background-color: #ffffff;
         }
 
-        /* 1. दूसरी फोटो जैसी हूबहू तिरंगा टॉप पट्टी */
+        /* 1. फोटो जैसी हूबहू तिरंगा ऊपर की पट्टी */
         .top-banner {
-            background: linear-gradient(to right, #FF9933 0%, #FF9933 35%, #ffffff 35%, #ffffff 65%, #128807 65%, #128807 100%);
+            background: linear-gradient(to right, #ff9933 0%, #ff9933 33%, #ffffff 33%, #ffffff 66%, #128807 66%, #128807 100%);
             padding: 12px 15px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-bottom: 2px solid #000080;
         }
 
         .banner-title {
             font-size: 20px;
             font-weight: bold;
-            color: #000080; /* गहरा नीला रंग */
+            color: #000080;
+            margin: 0;
             display: flex;
             align-items: center;
-            gap: 6px;
-            margin: 0;
-            text-shadow: 1px 1px 1px rgba(255,255,255,0.8);
+            gap: 5px;
         }
 
-        /* फोटो जैसा नाम बदलें बटन */
+        /* फोटो जैसा गहरा नीला 'नाम बदलें' बटन */
         .change-name-btn {
             background-color: #000080;
             color: white;
@@ -68,15 +63,14 @@
             font-weight: bold;
         }
 
-        /* 2. फोटो जैसी हूबहू पीली API Key पट्टी */
+        /* 2. फोटो जैसी हूबहू पीली API Key वाली पट्टी */
         .api-section { 
             background-color: #fff9db; 
             padding: 10px 15px; 
             display: flex; 
             align-items: center; 
             justify-content: space-between;
-            border-bottom: 1px solid #e0e0e0;
-            box-sizing: border-box;
+            border-bottom: 1px solid #ccc;
             gap: 10px;
         }
         
@@ -89,65 +83,64 @@
 
         .api-input-box {
             flex: 1;
-            padding: 6px 10px;
+            padding: 8px 10px;
             border: 1px solid #b0bec5;
             border-radius: 4px;
             font-size: 16px;
             background-color: #ffffff;
         }
 
-        /* फोटो जैसा गहरा नीला सेव बटन */
+        /* फोटो जैसा गहरा नीला 'सेव' बटन */
         .save-btn { 
             background-color: #000080; 
             color: white; 
             border: none; 
-            padding: 6px 18px; 
+            padding: 8px 18px; 
             font-size: 16px; 
             border-radius: 4px; 
             cursor: pointer;
             font-weight: bold;
         }
 
-        /* निर्माता क्रेडिट टेक्स्ट जो आपने कहा था */
+        /* निर्माता क्रेडिट लाइन जो ठीक पीली पट्टी के नीचे दिखेगी */
         .creator-text {
             text-align: center;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: bold;
-            color: #555555;
-            padding: 6px 0;
-            background-color: #f8f9fa;
+            color: #444444;
+            padding: 8px 0;
+            background-color: #f9f9f9;
             margin: 0;
-            border-bottom: 1px solid #eaeaea;
+            border-bottom: 1px solid #e0e0e0;
         }
 
-        /* 3. दूसरी फोटो जैसी चैट विंडो */
+        /* 3. फोटो जैसी मुख्य चैट विंडो */
         .chat-window { 
             flex: 1; 
             padding: 15px; 
             overflow-y: auto; 
-            background-color: #f7f9fb; 
+            background-color: #ffffff; 
             display: flex; 
             flex-direction: column; 
             gap: 15px;
-            height: 55vh;
+            height: 60vh;
         }
 
-        /* फोटो जैसे ही चैट बबल्स का डिज़ाइन */
+        /* फोटो जैसे ही गोल कोनों वाले चैट बबल्स */
         .msg { 
             padding: 12px 16px; 
-            border-radius: 18px; 
+            border-radius: 14px; 
             max-width: 80%; 
             font-size: 16px; 
             line-height: 1.4;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         
-        /* एआई का मेसेज (सफेद बैकग्राउंड) */
+        /* एआई का मेसेज (सफेद बैकग्राउंड और धूसर बॉर्डर) */
         .ai-msg { 
             background-color: #ffffff; 
             color: #000000; 
             align-self: flex-start; 
-            border: 1px solid #e8e8e8;
+            border: 1px solid #e0e0e0;
         }
         
         /* यूजर का मेसेज (फोटो जैसा गहरा नीला बैकग्राउंड) */
@@ -175,7 +168,6 @@
             border-radius: 25px; 
             font-size: 16px; 
             outline: none;
-            background-color: #ffffff;
         }
 
         /* फोटो जैसा गोल हरा 'भेजें' बटन */
@@ -189,66 +181,39 @@
             border-radius: 25px; 
             cursor: pointer;
         }
-
-        /* नाम रजिस्ट्रेशन पॉपअप */
-        .name-popup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .popup-box { background: white; padding: 25px; border-radius: 12px; text-align: center; max-width: 350px; width: 85%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .popup-box input { width: 100%; padding: 10px; margin: 15px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
-        .popup-box button { background-color: #000080; color: white; border: none; padding: 10px 20px; border-radius: 6px; width: 100%; font-size: 16px; font-weight: bold; cursor: pointer; }
-
-        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <!-- रजिस्ट्रेशन स्क्रीन पॉपअप -->
-    <div id="namePopup" class="name-popup hidden">
-        <div class="popup-box">
-            <h3 style="margin-top:0; color:#000080;">भारत AI में आपका स्वागत है</h3>
-            <p style="color:#555; font-size:14px;">आगे बढ़ने के लिए अपना नाम लिखें:</p>
-            <input type="text" id="userNameInput" placeholder="अपना नाम यहाँ लिखें...">
-            <button id="startBtn">प्रवेश करें</button>
-        </div>
-    </div>
-
-    <!-- मुख्य स्क्रीन लेआउट -->
     <div class="container">
         
-        <!-- दूसरी फोटो जैसी हूबहू तिरंगा पट्टी -->
+        <!-- तिरंगा ऊपर की पट्टी -->
         <div class="top-banner">
             <h2 class="banner-title">🇮🇳 मेरा भारत AI असिस्टेंट 🇮🇳</h2>
             <button id="changeNameBtn" class="change-name-btn">नाम बदलें</button>
         </div>
         
-        <!-- फोटो जैसी हूबहू पीली पट्टी -->
+        <!-- पीली पट्टी -->
         <div class="api-section">
             <div class="api-label">🔑 Gemini API Key:</div>
             <input type="password" id="apiKeyInput" class="api-input-box" placeholder="..........................................">
             <button id="saveBtn" class="save-btn">सेव</button>
         </div>
 
-        <!-- आपकी पसंद के अनुसार निर्माता क्रेडिट लाइन -->
+        <!-- इसके निर्माता सुलभ कुमार हैं -->
         <div class="creator-text">इसके निर्माता सुलभ कुमार हैं</div>
 
-        <!-- फोटो जैसी चैट विंडो -->
-        <div id="chatWindow" class="chat-window">
-            <!-- स्वागत संदेश यहाँ अपने आप लोड होगा -->
-        </div>
+        <!-- चैट विंडो -->
+        <div id="chatWindow" class="chat-window"></div>
 
-        <!-- फोटो जैसा निचला हिस्सा -->
+        <!-- निचला हिस्सा -->
         <div class="input-section">
             <input type="text" id="chatInput" class="chat-input" placeholder="यहाँ अपना सवाल लिखें...">
             <button id="sendBtn" class="send-btn">भेजें</button>
         </div>
     </div>
 
-    <script type="module">
-        import { GoogleGenerativeAI } from '@google/generative-ai';
-
-        const namePopup = document.getElementById('namePopup');
-        const userNameInput = document.getElementById('userNameInput');
-        const startBtn = document.getElementById('startBtn');
-        
+    <script>
         const apiKeyInput = document.getElementById('apiKeyInput');
         const saveBtn = document.getElementById('saveBtn');
         const chatInput = document.getElementById('chatInput');
@@ -258,43 +223,92 @@
 
         let genAI = null;
         let model = null;
-        let registeredName = "";
+        let registeredName = "Sulabh kumar"; // शुरुआत में डिफॉल्ट नाम
 
         window.addEventListener('load', () => {
             const savedName = localStorage.getItem('bharta_ai_user_name');
             const savedKey = localStorage.getItem('gemini_api_key');
 
-            if (savedKey) {
-                apiKeyInput.value = savedKey;
-                try {
-                    genAI = new GoogleGenerativeAI(savedKey);
-                    model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-                } catch (e) { console.error(e); }
-            }
-
             if (savedName) {
                 registeredName = savedName;
-                showWelcomeMessage();
             } else {
-                namePopup.classList.remove('hidden');
+                localStorage.setItem('bharta_ai_user_name', registeredName);
             }
-        });
 
-        startBtn.addEventListener('click', () => {
-            const name = userNameInput.value.trim();
-            if (!name) {
-                alert("कृपया अपना नाम जरूर लिखें!");
-                return;
+            if (savedKey) {
+                apiKeyInput.value = savedKey;
+                initializeAPI(savedKey);
             }
-            localStorage.setItem('bharta_ai_user_name', name);
-            registeredName = name;
-            namePopup.classList.add('hidden');
+
             showWelcomeMessage();
         });
 
-        userNameInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') startBtn.click();
+        function initializeAPI(key) {
+            try {
+                genAI = new GoogleGenerativeAI.GoogleGenerativeAI(key);
+                model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        changeNameBtn.addEventListener('click', () => {
+            const newName = prompt("अपना नया नाम लिखें:", registeredName);
+            if (newName && newName.trim() !== "") {
+                registeredName = newName.trim();
+                localStorage.setItem('bharta_ai_user_name', registeredName);
+                showWelcomeMessage();
+            }
         });
 
-        // नाम बदलें बटन का काम
-        changeNameBtn.addEventListener('click', () => {
+        // फोटो में लिखा हुआ हूबहू सटीक पहला मैसेज
+        function showWelcomeMessage() {
+            chatWindow.innerHTML = "";
+            appendMessage('AI', `नमस्ते ${registeredName}, वेलकम टू माई एआई! प्रणाम! मैं आपका अपना भारतीय AI दोस्त हूँ। ऊपर अपनी नई चाबी पेस्ट करके 'सेव' दबाएं, फिर नीचे सवाल पूछें।`);
+        }
+
+        // 'सेव' बटन का एकदम सही काम करने वाला फंक्शन
+        saveBtn.addEventListener('click', () => {
+            const key = apiKeyInput.value.trim();
+            if (!key) {
+                alert("कृपया पहले सही API Key बॉक्स में डालें!");
+                return;
+            }
+            localStorage.setItem('gemini_api_key', key);
+            initializeAPI(key);
+            alert("API Key सफलतापूर्वक सेव हो गई है! 🎉");
+        });
+
+        async function askGemini() {
+            const userMessage = chatInput.value.trim();
+            if (!userMessage) return;
+
+            if (!model) {
+                appendMessage('AI', "माफ करना भाई, कुछ गड़बड़ हो गई। ऊपर अपनी सही चाबी दोबारा डालकर 'सेव' बटन दबाएं!");
+                return;
+            }
+
+            try {
+                appendMessage('User', userMessage);
+                chatInput.value = '';
+
+                const result = await model.generateContent(userMessage);
+                const response = await result.response;
+                appendMessage('AI', response.text());
+
+            } catch (error) {
+                appendMessage('AI', "माफ करना भाई, कुछ गड़बड़ हो गई। ऊपर अपनी सही चाबी दोबारा डालकर 'सेव' बटन दबाएं!");
+            }
+        }
+
+        sendBtn.addEventListener('click', askGemini);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') askGemini();
+        });
+
+        function appendMessage(sender, text) {
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('msg');
+            if (sender === 'AI') {
+                msgDiv.classList.add('ai-msg');
+                msgDiv.innerHTML = text;
