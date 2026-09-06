@@ -4,242 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>मेरा भारत AI असिस्टेंट & HD फोटो टूल</title>
+    
+    <!-- आधिकारिक और सबसे सुरक्षित लोड होने वाली Gemini SDK स्क्रिप्ट -->
+    <script src="https://unpkg.com"></script>
 
     <style>
         * { box-sizing: border-box; }
-        body { 
-            font-family: Arial, sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            background-color: #f7f9fb; 
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            background-color: #ffffff;
-            box-shadow: 0 0 15px rgba(0,0,0,0.05);
-        }
-
-        /* तिरंगा ऊपर की पट्टी */
-        .top-banner {
-            background: linear-gradient(to right, #ff9933 0%, #ff9933 33%, #ffffff 33%, #ffffff 66%, #128807 66%, #128807 100%);
-            padding: 12px 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 2px solid #000080;
-        }
-
-        .banner-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #000080;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .change-name-btn {
-            background-color: #000080;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            font-size: 13px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* निर्माता क्रेडिट लाइन */
-        .creator-text {
-            text-align: center;
-            font-size: 14px;
-            font-weight: bold;
-            color: #444444;
-            padding: 8px 0;
-            background-color: #f9f9f9;
-            margin: 0;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        /* मोड बदलने वाला टैब */
-        .tab-section {
-            display: flex;
-            border-bottom: 1px solid #eaeaea;
-            background: #fff;
-        }
-        .tab-btn {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            background: #f8f9fa;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 15px;
-            color: #555;
-            transition: 0.3s;
-        }
-        .tab-btn.active {
-            background: #ffffff;
-            color: #000080;
-            border-bottom: 3px solid #FF9933;
-        }
-
-        /* मुख्य चैट विंडो */
-        .chat-window { 
-            flex: 1; 
-            padding: 15px; 
-            overflow-y: auto; 
-            background-color: #ffffff; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 15px;
-            height: 55vh;
-        }
-
-        .msg { 
-            padding: 12px 16px; 
-            border-radius: 14px; 
-            max-width: 80%; 
-            font-size: 16px; 
-            line-height: 1.4;
-        }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f7f9fb; display: flex; flex-direction: column; min-height: 100vh; }
+        .container { width: 100%; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; flex: 1; background-color: #ffffff; box-shadow: 0 0 15px rgba(0,0,0,0.05); }
+        .top-banner { background: linear-gradient(to right, #ff9933 0%, #ff9933 33%, #ffffff 33%, #ffffff 66%, #128807 66%, #128807 100%); padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #000080; }
+        .banner-title { font-size: 18px; font-weight: bold; color: #000080; margin: 0; display: flex; align-items: center; gap: 5px; }
+        .change-name-btn { background-color: #000080; color: white; border: none; padding: 6px 12px; font-size: 13px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .creator-text { text-align: center; font-size: 14px; font-weight: bold; color: #444444; padding: 8px 0; background-color: #f9f9f9; margin: 0; border-bottom: 1px solid #e0e0e0; }
+        .tab-section { display: flex; border-bottom: 1px solid #eaeaea; background: #fff; }
+        .tab-btn { flex: 1; padding: 12px; text-align: center; background: #f8f9fa; border: none; cursor: pointer; font-weight: bold; font-size: 15px; color: #555; transition: 0.3s; }
+        .tab-btn.active { background: #ffffff; color: #000080; border-bottom: 3px solid #FF9933; }
+        .chat-window { flex: 1; padding: 15px; overflow-y: auto; background-color: #ffffff; display: flex; flex-direction: column; gap: 15px; height: 55vh; }
+        .msg { padding: 12px 16px; border-radius: 14px; max-width: 80%; font-size: 16px; line-height: 1.4; }
+        .ai-msg { background-color: #ffffff; color: #000000; align-self: flex-start; border: 1px solid #e0e0e0; }
+        .user-msg { background-color: #000080; color: #ffffff; align-self: flex-end; }
         
-        .ai-msg { 
-            background-color: #ffffff; 
-            color: #000000; 
-            align-self: flex-start; 
-            border: 1px solid #e0e0e0;
-        }
+        .photo-section { flex: 1; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 20px; background: #ffffff; height: 55vh; overflow-y: auto; }
+        .upload-box { border: 2px dashed #b0bec5; padding: 30px; border-radius: 12px; text-align: center; width: 100%; background: #fafafa; cursor: pointer; }
+        .preview-container { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+        .preview-img { max-width: 100%; max-height: 250px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .enhance-btn { background-color: #ff9933; color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; }
+        .download-btn { background-color: #128807; color: white; border: none; padding: 10px 20px; font-size: 15px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 5px; }
         
-        .user-msg { 
-            background-color: #000080; 
-            color: #ffffff; 
-            align-self: flex-end; 
-        }
-
-        /* फोटो एनहान्सर सेक्शन */
-        .photo-section {
-            flex: 1;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            background: #ffffff;
-            height: 55vh;
-            overflow-y: auto;
-        }
-        .upload-box {
-            border: 2px dashed #b0bec5;
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            width: 100%;
-            background: #fafafa;
-            cursor: pointer;
-        }
-        .preview-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-        }
-        .preview-img {
-            max-width: 100%;
-            max-height: 250px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        .enhance-btn {
-            background-color: #ff9933;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-        }
-        .download-btn {
-            background-color: #128807;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 15px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 5px;
-        }
-
-        /* निचला इनपुट हिस्सा */
-        .input-section { 
-            padding: 15px; 
-            display: flex; 
-            gap: 10px; 
-            align-items: center;
-            background-color: #ffffff;
-            border-top: 1px solid #eaeaea;
-        }
-
-        .chat-input { 
-            flex: 1; 
-            padding: 12px 20px; 
-            border: 1px solid #ccc; 
-            border-radius: 25px; 
-            font-size: 16px; 
-            outline: none;
-        }
-
-        .send-btn { 
-            background-color: #008000; 
-            color: white; 
-            border: none; 
-            padding: 12px 24px; 
-            font-size: 16px; 
-            font-weight: bold;
-            border-radius: 25px; 
-            cursor: pointer;
-        }
-
+        .input-section { padding: 15px; display: flex; gap: 10px; align-items: center; background-color: #ffffff; border-top: 1px solid #eaeaea; }
+        .chat-input { flex: 1; padding: 12px 20px; border: 1px solid #ccc; border-radius: 25px; font-size: 16px; outline: none; }
+        .send-btn { background-color: #008000; color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 25px; cursor: pointer; }
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <!-- तिरंगा ऊपर की पट्टी -->
         <div class="top-banner">
             <h2 class="banner-title">🇮🇳 मेरा भारत AI असिस्टेंट 🇮🇳</h2>
             <button id="changeNameBtn" class="change-name-btn">नाम बदलें</button>
         </div>
-
-        <!-- निर्माता क्रेडिट लाइन -->
         <div class="creator-text">इसके निर्माता सुलभ कुमार हैं</div>
-
-        <!-- टैब मेनू -->
         <div class="tab-section">
             <button id="chatTab" class="tab-btn active">💬 AI चैट सहायक</button>
             <button id="photoTab" class="tab-btn">✨ AI फोटो HD मेकर</button>
         </div>
-
-        <!-- 1. चैट विंडो एरिया -->
         <div id="chatWindow" class="chat-window"></div>
-
-        <!-- 2. फोटो एनहान्सर एरिया -->
+        
         <div id="photoSection" class="photo-section hidden">
             <div class="upload-box" onclick="document.getElementById('fileInput').click()">
                 <p style="margin:0; color:#555; font-weight:bold;">📸 फोटो अपलोड करने के लिए यहाँ क्लिक करें</p>
@@ -252,8 +62,7 @@
                 <button id="downloadBtn" class="download-btn hidden">📥 HD फोटो डाउनलोड करें</button>
             </div>
         </div>
-
-        <!-- चैट का निचला इनपुट हिस्सा -->
+        
         <div id="inputSection" class="input-section">
             <input type="text" id="chatInput" class="chat-input" placeholder="यहाँ अपना सवाल लिखें...">
             <button id="sendBtn" class="send-btn">भेजें</button>
@@ -265,12 +74,10 @@
         const sendBtn = document.getElementById('sendBtn');
         const chatWindow = document.getElementById('chatWindow');
         const changeNameBtn = document.getElementById('changeNameBtn');
-
         const chatTab = document.getElementById('chatTab');
         const photoTab = document.getElementById('photoTab');
         const photoSection = document.getElementById('photoSection');
         const inputSection = document.getElementById('inputSection');
-
         const fileInput = document.getElementById('fileInput');
         const previewContainer = document.getElementById('previewContainer');
         const imagePreview = document.getElementById('imagePreview');
@@ -278,29 +85,36 @@
         const downloadBtn = document.getElementById('downloadBtn');
 
         let registeredName = "Sulabh kumar"; 
-        
-        // मास्टर API Key सीधे सुरक्षित रूप से एम्बेडेड है
         const finalMasterKey = "AIzaSyC_9vIivogvWwYJEeFesxSFxLtc98I3bg"; 
+        let genAI = null;
+        let model = null;
 
         window.addEventListener('load', () => {
             const savedName = localStorage.getItem('bharta_ai_user_name');
             if (savedName) registeredName = savedName;
+            
+            // आधिकारिक SDK इनिशियलाइजेशन
+            try {
+                if (window.GoogleGenerativeAI) {
+                    genAI = new window.GoogleGenerativeAI.GoogleGenerativeAI(finalMasterKey);
+                    model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+                }
+            } catch (e) {
+                console.error(e);
+            }
+            
             showWelcomeMessage();
         });
 
         chatTab.addEventListener('click', () => {
-            chatTab.classList.add('active');
-            photoTab.classList.remove('active');
-            chatWindow.classList.remove('hidden');
-            inputSection.classList.remove('hidden');
+            chatTab.classList.add('active'); photoTab.classList.remove('active');
+            chatWindow.classList.remove('hidden'); inputSection.classList.remove('hidden');
             photoSection.classList.add('hidden');
         });
 
         photoTab.addEventListener('click', () => {
-            photoTab.classList.add('active');
-            chatTab.classList.remove('active');
-            chatWindow.classList.add('hidden');
-            inputSection.classList.add('hidden');
+            photoTab.classList.add('active'); chatTab.classList.remove('active');
+            chatWindow.classList.add('hidden'); inputSection.classList.add('hidden');
             photoSection.classList.remove('hidden');
         });
 
@@ -310,3 +124,49 @@
                 registeredName = newName.trim();
                 localStorage.setItem('bharta_ai_user_name', registeredName);
                 showWelcomeMessage();
+            }
+        });
+
+        function showWelcomeMessage() {
+            chatWindow.innerHTML = "";
+            appendMessage('AI', `नमस्ते ${registeredName}, वेलकम टू माई एआई! प्रणाम! मैं आपका अपना भारतीय AI दोस्त हूँ। आपका असिस्टेंट पूरी तरह तैयार है, नीचे अपना सवाल पूछें।`);
+        }
+
+        // आधिकारिक और सुरक्षित SDK रन मेथड जो ब्लॉक नहीं होगा
+        async function askGemini() {
+            const userMessage = chatInput.value.trim();
+            if (!userMessage) return;
+
+            try {
+                appendMessage('User', userMessage);
+                chatInput.value = '';
+
+                if (!model) {
+                    appendMessage('AI', "सिस्टम लोड हो रहा है, कृपया 1 सेकंड बाद दोबारा प्रयास करें।");
+                    return;
+                }
+
+                // SDK से डायरेक्ट सुरक्षित रिस्पॉन्स
+                const result = await model.generateContent(userMessage);
+                const response = await result.response;
+                const text = response.text();
+
+                if (text) {
+                    appendMessage('AI', text);
+                } else {
+                    appendMessage('AI', "माफ करना भाई, रिस्पॉन्स खाली मिला। दोबारा प्रयास करें।");
+                }
+            } catch (error) {
+                console.error(error);
+                appendMessage('AI', "त्रुटि! कृपया इंटरनेट कनेक्शन की जांच करें।");
+            }
+        }
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files;
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    imagePreview.src = event.target.result;
+                    previewContainer.classList.remove('hidden');
+                    downloadBtn.classList.add('hidden');
