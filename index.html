@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>भारत AI - सुलभ कुमार</title>
+    <title>मेरा भारत AI असिस्टेंट</title>
     
     <!-- Gemini SDK लाइब्रेरी -->
     <script type="importmap">
@@ -15,7 +15,6 @@
     </script>
 
     <style>
-        /* स्क्रीन और मुख्य लेआउट */
         body { 
             font-family: Arial, sans-serif; 
             margin: 0; 
@@ -36,31 +35,61 @@
             box-sizing: border-box;
         }
 
-        /* 1. फोटो जैसी हूबहू पीली API Key पट्टी */
+        /* 1. दूसरी फोटो जैसी हूबहू तिरंगा टॉप पट्टी */
+        .top-banner {
+            background: linear-gradient(to right, #FF9933 0%, #FF9933 35%, #ffffff 35%, #ffffff 65%, #128807 65%, #128807 100%);
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .banner-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #000080; /* गहरा नीला रंग */
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 0;
+            text-shadow: 1px 1px 1px rgba(255,255,255,0.8);
+        }
+
+        /* फोटो जैसा नाम बदलें बटन */
+        .change-name-btn {
+            background-color: #000080;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* 2. फोटो जैसी हूबहू पीली API Key पट्टी */
         .api-section { 
             background-color: #fff9db; 
             padding: 10px 15px; 
             display: flex; 
             align-items: center; 
             justify-content: space-between;
-            border-bottom: 2px solid #1a237e;
+            border-bottom: 1px solid #e0e0e0;
             box-sizing: border-box;
             gap: 10px;
         }
         
         .api-label {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             color: #333333;
             white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 4px;
         }
 
         .api-input-box {
             flex: 1;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border: 1px solid #b0bec5;
             border-radius: 4px;
             font-size: 16px;
@@ -72,55 +101,35 @@
             background-color: #000080; 
             color: white; 
             border: none; 
-            padding: 8px 20px; 
+            padding: 6px 18px; 
             font-size: 16px; 
             border-radius: 4px; 
             cursor: pointer;
             font-weight: bold;
         }
 
-        /* 2. तिरंगा स्टाइल हाई-फाई हेडर और आपका नाम (चैट के ऊपर) */
-        .brand-header {
+        /* निर्माता क्रेडिट टेक्स्ट जो आपने कहा था */
+        .creator-text {
             text-align: center;
-            padding: 15px 10px 5px 10px;
-        }
-
-        .brand-title {
-            font-size: 28px;
-            font-weight: 800;
-            margin: 0 0 4px 0;
-            background: linear-gradient(to right, #FF9933 30%, #777777 50%, #128807 70%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 1px;
-        }
-
-        .brand-welcome {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
-            color: #444;
+            color: #555555;
+            padding: 6px 0;
+            background-color: #f8f9fa;
             margin: 0;
+            border-bottom: 1px solid #eaeaea;
         }
 
-        .brand-creator {
-            font-size: 12px;
-            font-weight: bold;
-            color: #666;
-            margin: 2px 0 0 0;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* 3. फोटो जैसी चैट विंडो */
+        /* 3. दूसरी फोटो जैसी चैट विंडो */
         .chat-window { 
             flex: 1; 
             padding: 15px; 
             overflow-y: auto; 
-            background-color: #ffffff; 
+            background-color: #f7f9fb; 
             display: flex; 
             flex-direction: column; 
             gap: 15px;
-            height: 50vh;
+            height: 55vh;
         }
 
         /* फोटो जैसे ही चैट बबल्स का डिज़ाइन */
@@ -130,15 +139,15 @@
             max-width: 80%; 
             font-size: 16px; 
             line-height: 1.4;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         
-        /* एआई का मेसेज (सफेद बैकग्राउंड और धूसर बॉर्डर) */
+        /* एआई का मेसेज (सफेद बैकग्राउंड) */
         .ai-msg { 
             background-color: #ffffff; 
             color: #000000; 
             align-self: flex-start; 
-            border: 1px solid #e0e0e0;
+            border: 1px solid #e8e8e8;
         }
         
         /* यूजर का मेसेज (फोटो जैसा गहरा नीला बैकग्राउंड) */
@@ -155,7 +164,7 @@
             gap: 10px; 
             align-items: center;
             background-color: #ffffff;
-            border-top: 1px solid #f0f0f0;
+            border-top: 1px solid #eaeaea;
         }
 
         /* गोल कोनों वाला सवाल लिखने का बॉक्स */
@@ -166,7 +175,7 @@
             border-radius: 25px; 
             font-size: 16px; 
             outline: none;
-            background-color: #fcfcfc;
+            background-color: #ffffff;
         }
 
         /* फोटो जैसा गोल हरा 'भेजें' बटन */
@@ -179,10 +188,9 @@
             font-weight: bold;
             border-radius: 25px; 
             cursor: pointer;
-            white-space: nowrap;
         }
 
-        /* रजिस्ट्रेशन पॉपअप (बैकग्राउंड ब्लर के साथ) */
+        /* नाम रजिस्ट्रेशन पॉपअप */
         .name-popup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 1000; }
         .popup-box { background: white; padding: 25px; border-radius: 12px; text-align: center; max-width: 350px; width: 85%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         .popup-box input { width: 100%; padding: 10px; margin: 15px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
@@ -197,14 +205,20 @@
     <div id="namePopup" class="name-popup hidden">
         <div class="popup-box">
             <h3 style="margin-top:0; color:#000080;">भारत AI में आपका स्वागत है</h3>
-            <p style="color:#555; font-size:14px;">आगे बढ़ने के लिए अपना नाम लिखकर रजिस्टर करें:</p>
+            <p style="color:#555; font-size:14px;">आगे बढ़ने के लिए अपना नाम लिखें:</p>
             <input type="text" id="userNameInput" placeholder="अपना नाम यहाँ लिखें...">
-            <button id="startBtn">रजिस्टर करें और प्रवेश करें</button>
+            <button id="startBtn">प्रवेश करें</button>
         </div>
     </div>
 
     <!-- मुख्य स्क्रीन लेआउट -->
     <div class="container">
+        
+        <!-- दूसरी फोटो जैसी हूबहू तिरंगा पट्टी -->
+        <div class="top-banner">
+            <h2 class="banner-title">🇮🇳 मेरा भारत AI असिस्टेंट 🇮🇳</h2>
+            <button id="changeNameBtn" class="change-name-btn">नाम बदलें</button>
+        </div>
         
         <!-- फोटो जैसी हूबहू पीली पट्टी -->
         <div class="api-section">
@@ -213,12 +227,8 @@
             <button id="saveBtn" class="save-btn">सेव</button>
         </div>
 
-        <!-- नया हाई-फाई तिरंगा ब्रांडिंग और क्रिएटर का नाम -->
-        <div class="brand-header">
-            <h1 class="brand-title">भारत AI</h1>
-            <p class="brand-welcome">भारत AI पर आपका स्वागत है</p>
-            <p class="brand-creator">इसके निर्माता सुलभ कुमार हैं</p>
-        </div>
+        <!-- आपकी पसंद के अनुसार निर्माता क्रेडिट लाइन -->
+        <div class="creator-text">इसके निर्माता सुलभ कुमार हैं</div>
 
         <!-- फोटो जैसी चैट विंडो -->
         <div id="chatWindow" class="chat-window">
@@ -244,6 +254,7 @@
         const chatInput = document.getElementById('chatInput');
         const sendBtn = document.getElementById('sendBtn');
         const chatWindow = document.getElementById('chatWindow');
+        const changeNameBtn = document.getElementById('changeNameBtn');
 
         let genAI = null;
         let model = null;
@@ -285,17 +296,5 @@
             if (e.key === 'Enter') startBtn.click();
         });
 
-        function showWelcomeMessage() {
-            chatWindow.innerHTML = "";
-            appendMessage('AI', `नमस्ते ${registeredName}, भारत AI पर आपका स्वागत है। आप मुझसे कोई भी सवाल पूछ सकते हैं!`);
-        }
-
-        saveBtn.addEventListener('click', () => {
-            const key = apiKeyInput.value.trim();
-            if (!key) {
-                alert("कृपया सही API Key डालें!");
-                return;
-            }
-            try {
-                localStorage.setItem('gemini_api_key', key);
-                genAI = new GoogleGenerativeAI(key);
+        // नाम बदलें बटन का काम
+        changeNameBtn.addEventListener('click', () => {
