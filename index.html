@@ -28,7 +28,7 @@
             box-shadow: 0 0 15px rgba(0,0,0,0.05);
         }
 
-        /* 1. तिरंगा ऊपर की पट्टी */
+        /* तिरंगा ऊपर की पट्टी */
         .top-banner {
             background: linear-gradient(to right, #ff9933 0%, #ff9933 33%, #ffffff 33%, #ffffff 66%, #128807 66%, #128807 100%);
             padding: 12px 15px;
@@ -59,10 +59,10 @@
             font-weight: bold;
         }
 
-        /* 2. पीली API Key वाली पट्टी */
+        /* पीली API Key वाली पट्टी */
         .api-section { 
             background-color: #fff9db; 
-            padding: 10px 15px; 
+            padding: 12px 15px; 
             display: flex; 
             align-items: center; 
             justify-content: space-between;
@@ -79,9 +79,9 @@
 
         .api-input-box {
             flex: 1;
-            padding: 8px 10px;
-            border: 1px solid #b0bec5;
-            border-radius: 4px;
+            padding: 10px;
+            border: 2px solid #b0bec5;
+            border-radius: 6px;
             font-size: 15px;
             background-color: #ffffff;
         }
@@ -90,9 +90,9 @@
             background-color: #000080; 
             color: white; 
             border: none; 
-            padding: 8px 18px; 
+            padding: 10px 22px; 
             font-size: 15px; 
-            border-radius: 4px; 
+            border-radius: 6px; 
             cursor: pointer;
             font-weight: bold;
         }
@@ -109,7 +109,7 @@
             border-bottom: 1px solid #e0e0e0;
         }
 
-        /* 🌟 नया मोड बदलने वाला टैब (चैट या फोटो) */
+        /* मोड बदलने वाला टैब */
         .tab-section {
             display: flex;
             border-bottom: 1px solid #eaeaea;
@@ -166,7 +166,7 @@
             align-self: flex-end; 
         }
 
-        /* 🌟 फोटो एनहान्सर सेक्शन स्टाइल */
+        /* फोटो एनहान्सर सेक्शन */
         .photo-section {
             flex: 1;
             padding: 20px;
@@ -275,7 +275,7 @@
         <!-- निर्माता क्रेडिट लाइन -->
         <div class="creator-text">इसके निर्माता सुलभ कुमार हैं</div>
 
-        <!-- 🌟 नया टैब मेनू -->
+        <!-- टैब मेनू -->
         <div class="tab-section">
             <button id="chatTab" class="tab-btn active">💬 AI चैट सहायक</button>
             <button id="photoTab" class="tab-btn">✨ AI फोटो HD मेकर</button>
@@ -284,7 +284,7 @@
         <!-- 1. चैट विंडो एरिया -->
         <div id="chatWindow" class="chat-window"></div>
 
-        <!-- 🌟 2. नया फोटो एनहान्सर एरिया -->
+        <!-- 2. फोटो एनहान्सर एरिया -->
         <div id="photoSection" class="photo-section hidden">
             <div class="upload-box" onclick="document.getElementById('fileInput').click()">
                 <p style="margin:0; color:#555; font-weight:bold;">📸 फोटो अपलोड करने के लिए यहाँ क्लिक करें</p>
@@ -313,12 +313,12 @@
         const chatWindow = document.getElementById('chatWindow');
         const changeNameBtn = document.getElementById('changeNameBtn');
 
-        // टैब एलिमेंट्स
         const chatTab = document.getElementById('chatTab');
         const photoTab = document.getElementById('photoTab');
         const photoSection = document.getElementById('photoSection');
         const inputSection = document.getElementById('inputSection');
 
-        // फोटो एलिमेंट्स
         const fileInput = document.getElementById('fileInput');
         const previewContainer = document.getElementById('previewContainer');
+        const imagePreview = document.getElementById('imagePreview');
+        const enhanceBtn = document.getElementById('enhanceBtn');
