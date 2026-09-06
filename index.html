@@ -35,11 +35,14 @@
         🇮🇳 मेरा भारत AI असिस्टेंट 🇮🇳
         <button class="reset-btn" onclick="resetName()">नाम बदलें</button>
     </div>
+    
+    <!-- यह बॉक्स अब हमेशा खुला रहेगा जब तक सही चाबी न डाली जाए -->
     <div class="key-area" id="keyArea">
         <label for="apiKeyInput">🔑 Gemini API Key:</label>
-        <input type="password" id="apiKeyInput" placeholder="AIzaSy...">
+        <input type="password" id="apiKeyInput" placeholder="यहाँ नई चाबी पेस्ट करें...">
         <button onclick="saveKey()">सेव</button>
     </div>
+    
     <div class="chat-container" id="chatContainer"></div>
     <div class="input-area">
         <input type="text" id="userInput" placeholder="यहाँ अपना सवाल लिखें...">
@@ -48,11 +51,23 @@
     <script>
         let API_KEY = localStorage.getItem("gemini_api_key") || "";
         let USER_NAME = localStorage.getItem("user_name") || "";
+        
         window.onload = function() {
+            // स्पेशल रिसेट चेक
+            if (window.location.search.includes("reset=true")) {
+                localStorage.clear();
+                window.location.href = window.location.origin + window.location.pathname;
+                return;
+            }
             if (!USER_NAME) { document.getElementById("registerScreen").style.display = "flex"; } 
             else { showWelcomeMessage(); }
-            if (API_KEY) { document.getElementById("keyArea").style.display = "none"; }
+            
+            // अगर पहले से चाबी है तो इनपुट में दिखा दो ताकि यूजर बदल सके
+            if (API_KEY) {
+                document.getElementById("apiKeyInput").value = API_KEY;
+            }
         };
+        
         function registerUser() {
             const nameValue = document.getElementById("nameInput").value.trim();
             if (nameValue) {
@@ -64,18 +79,19 @@
         }
         function showWelcomeMessage() {
             const container = document.getElementById("chatContainer");
-            container.innerHTML = `<div class="message ai">नमस्ते ${USER_NAME}, वेलकम टू माई एआई! प्रणाम! मैं आपका अपना भारतीय AI दोस्त हूँ। बताइए आज आपकी क्या सेवा करूँ?</div>`;
+            container.innerHTML = `<div class="message ai">नमस्ते ${USER_NAME}, वेलकम टू माई एआई! प्रणाम! मैं आपका अपना भारतीय AI दोस्त हूँ। ऊपर अपनी नई चाबी पेस्ट करके 'सेव' दबाएं, फिर नीचे सवाल पूछें।</div>`;
         }
-        function resetName() { localStorage.removeItem("user_name"); location.reload(); }
+        function resetName() { localStorage.clear(); location.reload(); }
+        
         function saveKey() {
             const keyInput = document.getElementById("apiKeyInput").value.trim();
             if(keyInput) {
                 localStorage.setItem("gemini_api_key", keyInput);
                 API_KEY = keyInput;
-                document.getElementById("keyArea").style.display = "none";
-                alert("आपकी चाबी सुरक्षित रूप से सेट हो गई है!");
+                alert("आपकी नई चाबी सेट हो गई है! अब नीचे सवाल पूछें।");
             } else { alert("कृपया सही API Key डालें!"); }
         }
+        
         async function sendMessage() {
             if (!API_KEY) { alert("कृपया पहले ऊपर अपनी Gemini API Key डालकर सेव करें!"); return; }
             const inputField = document.getElementById("userInput");
@@ -86,18 +102,16 @@
             const aiMessageElement = appendMessage("सोच रहा हूँ भाई...", 'ai');
             try {
                 const promptText = `तुम भारत के एक सच्चे दोस्त और AI असिस्टेंट हो। यूज़र का नाम ${USER_NAME} है। यूज़र के सवाल का जवाब बहुत ही सरल हिंदी या देसी अंदाज़ में मज़ाक और मुहावरों के साथ दो। कभी-कभी उनके नाम का भी इस्तेमाल करो। यूज़र का सवाल है: ${userText}`;
-                
-                // अपडेटेड लिंक: v1beta से v1 और मॉडल को gemini-2.5-flash किया गया है
                 const response = await fetch(`https://googleapis.com{API_KEY}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
                 });
                 const data = await response.json();
-                if (data.candidates && data.candidates[0].content.parts[0].text) {
-                    aiMessageElement.innerText = data.candidates[0].content.parts[0].text;
-                } else { aiMessageElement.innerText = "चाबी (API Key) गलत लग रही है भाई, एक बार चेक कर लो!"; }
-            } catch (error) { aiMessageElement.innerText = "माफ करना भाई, कुछ गड़बड़ हो गई। अपनी API Key चेक करो या दोबारा 'नाम बदलें' पर क्लिक करके रिफ्रेश करो!"; }
+                if (data.candidates && data.candidates.content.parts.text) {
+                    aiMessageElement.innerText = data.candidates.content.parts.text;
+                } else { aiMessageElement.innerText = "चाबी (API Key) गलत लग रही है भाई, ऊपर दोबारा सही चाबी डालकर 'सेव' दबाएं!"; }
+            } catch (error) { aiMessageElement.innerText = "माफ करना भाई, कुछ गड़बड़ हो गई। ऊपर अपनी सही चाबी दोबारा डालकर 'सेव' बटन दबाएं!"; }
         }
         function appendMessage(text, sender) {
             const container = document.getElementById("chatContainer");
