@@ -164,17 +164,17 @@
                 <div class="brand-name">DesiAI 🚀</div>
                 <div class="creator-name">By Sulabh Kumar</div>
             </div>
-            <div class="status-badge">लोकल स्मार्ट मोड एक्टिव</div>
+            <div class="status-badge" id="botStatus">ऑनलाइन लाइव मोड</div>
         </div>
 
         <div class="main-content" id="mainContent">
             <div id="welcomeSection" style="text-align: center; margin-bottom: 10px;">
-                <p style="color: #f0f6fc; font-size: 15px; font-weight: 600; margin-bottom: 5px;">सुलभ कुमार द्वारा निर्मित भारत का अपना एआई</p>
-                <p style="color: #8b949e; font-size: 13px;">नमस्ते! मैं आपकी सेवा में हाजिर हूँ। नीचे कुछ भी लिखकर या बटनों पर क्लिक करके पूछें!</p>
+                <p style="color: #f0f6fc; font-size: 15px; font-weight: 600; margin-bottom: 5px;">सुलभ कुमार द्वारा निर्मित भारत का अपना असली एआई</p>
+                <p style="color: #8b949e; font-size: 13px;">नमस्ते! अब मैं लाइव हूँ। मुझसे दुनिया का कोई भी सवाल पूछिए!</p>
             </div>
             
             <div class="features-grid" id="featGrid">
-                <div class="feature-card" onclick="setInput('भोजपुरी में बताओ भारत के बारे में')">
+                <div class="feature-card" onclick="setInput('भोजपुरी में भारत के बारे में बताओ')">
                     <div class="feature-icon">🗣️</div>
                     <div class="feature-title">देसी बोली</div>
                     <div class="feature-desc">लोकल टोन में बात करें।</div>
@@ -184,15 +184,15 @@
                     <div class="feature-title">सरकारी योजना</div>
                     <div class="feature-desc">सरकारी योजनाओं की जानकारी।</div>
                 </div>
-                <div class="feature-card" onclick="setInput('कागज स्कैन कैसे करें?')">
-                    <div class="feature-icon">📑</div>
-                    <div class="feature-title">कागज स्कैनर</div>
-                    <div class="feature-desc">सरकारी कागजात आसान भाषा में।</div>
+                <div class="feature-card" onclick="setInput('भारत के प्रधानमंत्री कौन हैं?')">
+                    <div class="feature-icon">👑</div>
+                    <div class="feature-title">सामान्य ज्ञान</div>
+                    <div class="feature-desc">कोई भी जीके प्रश्न पूछें।</div>
                 </div>
-                <div class="feature-card" onclick="setInput('व्हाट्सएप पर बिल कैसे भरें?')">
-                    <div class="feature-icon">💬</div>
-                    <div class="feature-title">व्हाट्सएप और UPI</div>
-                    <div class="feature-desc">सीधे चैट से भुगतान।</div>
+                <div class="feature-card" onclick="setInput('एक बेहतरीन हिंदी कविता सुनाओ')">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-title">क्रिएटिव मोड</div>
+                    <div class="feature-desc">शायरी और कविताएं लिखें।</div>
                 </div>
             </div>
 
@@ -200,8 +200,8 @@
         </div>
 
         <div class="input-container">
-            <input type="text" class="prompt-input" id="userInput" placeholder="अपनी भाषा में कुछ भी पूछें...">
-            <button class="send-btn" onclick="processLocalAI()">➔</button>
+            <input type="text" class="prompt-input" id="userInput" placeholder="यहाँ अपना सवाल लिखें...">
+            <button class="send-btn" onclick="askLiveAI()">➔</button>
         </div>
     </div>
 
@@ -210,42 +210,45 @@
             document.getElementById('userInput').value = text;
         }
 
-        function processLocalAI() {
+        async function askLiveAI() {
             const inputField = document.getElementById('userInput');
             const responseBox = document.getElementById('aiResponse');
-            const prompt = inputField.value.trim().toLowerCase();
+            const welcomeText = document.getElementById('welcomeSection');
+            const grid = document.getElementById('featGrid');
+            const prompt = inputField.value.trim();
 
             if (!prompt) return;
 
-            document.getElementById('featGrid').style.display = 'none';
-            document.getElementById('welcomeSection').style.display = 'none';
+            // स्क्रीन सेटिंग्स अपडेट करना
+            grid.style.display = 'none';
+            welcomeText.style.display = 'none';
             responseBox.style.display = 'block';
-            responseBox.innerText = "🤖 DesiAI सोच रहा है...";
+            responseBox.innerText = "🤖 DesiAI सोच रहा है और जवाब ढूंढ रहा है...";
             inputField.value = "";
 
-            // लोकल बुद्धिमान रिस्पॉन्स सिस्टम (बिना API Key के चलेगा)
-            setTimeout(() => {
-                let reply = "";
+            // सुलभ जी के लिए स्पेशल नियम (क्रिएटर प्रोटेक्शन)
+            let lowerPrompt = prompt.toLowerCase();
+            if (lowerPrompt.includes('बनाया') || lowerPrompt.includes('निर्माता') || lowerPrompt.includes('मालिक') || lowerPrompt.includes('creator') || lowerPrompt.includes('who made you')) {
+                setTimeout(() => {
+                    responseBox.innerText = "🥇 मुझे गर्व है कि मुझे महान भारतीय डेवलपर सुलभ कुमार जी ने बनाया है! मैं सुलभ जी द्वारा निर्मित भारत का अपना शुद्ध एआई (DesiAI) हूँ।";
+                }, 500);
+                return;
+            }
 
-                if (prompt.includes('बनाया') || prompt.includes('निर्माता') || prompt.includes('मालिक') || prompt.includes('creator') || prompt.includes('who made you')) {
-                    reply = "🥇 मुझे गर्व है कि मुझे महान भारतीय डेवलपर सुलभ कुमार जी ने बनाया है! मैं भारत का अपना शुद्ध एआई (DesiAI) हूँ।";
-                } else if (prompt.includes('hi') || prompt.includes('hello') || prompt.includes('नमस्ते') || prompt.includes('प्रणाम')) {
-                    reply = "👋 नमस्ते सुलभ जी और DesiAI के सभी प्यारे यूजर्स! मैं सुलभ कुमार द्वारा बनाया गया एआई हूँ। आज मैं आपकी क्या सेवा करूँ?";
-                } else if (prompt.includes('भोजपुरी') || prompt.includes('बोली')) {
-                    reply = "🗣️ अरे राऊआ सब का प्रणाम बा! सुलभ भैया हमके अइसन बनवले बानी कि हम रउआ लोगन के भाषा भोजपुरी, हरियाणवी, मारवाड़ी सब बुझ सकीला। पूछिए का पूछे के बा?";
-                } else if (prompt.includes('योजना') || prompt.includes('किसान')) {
-                    reply = "📄 सरकारी योजना गाइड एक्टिव: सुलभ कुमार जी के विशेष फीचर के अनुसार, पीएम-किसान योजना के तहत किसानों को सालाना ₹6000 मिलते हैं। अपना राज्य बताएं ताकि मैं और योजनाएं ढूंढ सकूं।";
-                } else if (prompt.includes('स्कैन') || prompt.includes('कागज')) {
-                    reply = "📑 कागज स्कैनर मोड: आप अपने किसी भी कठिन सरकारी या कानूनी दस्तावेज का फोटो अपलोड करें, मैं उसे सुलभ जी के आसान शब्दों में समझा दूंगा।";
-                } else if (prompt.includes('व्हाट्सएप') || prompt.includes('upi') || prompt.includes('बिल')) {
-                    reply = "💬 व्हाट्सएप और UPI इंटीग्रेशन: अब आप सीधे व्हाट्सएप चैट से अपने बिजली बिल, मोबाइल रिचार्ज और अन्य भुगतान केवल एक क्लिक में सुरक्षित रूप से कर सकते हैं।";
+            try {
+                // मुफ़्त और पब्लिक एआई सर्वर का उपयोग करके जवाब लाना
+                const response = await fetch(`https://pollinations.ai{encodeURIComponent(prompt + " (कृपया शुद्ध, सरल और स्पष्ट हिंदी भाषा में सुंदर जवाब दें)")}`);
+                
+                if (response.ok) {
+                    const aiText = await response.text();
+                    responseBox.innerText = aiText;
                 } else {
-                    // सामान्य सवालों के लिए स्मार्ट लोकल जवाब
-                    reply = "🤖 सुलभ जी के DesiAI में आपका स्वागत है!\n\nआपने पूछा: '" + prompt + "'\n\nलोकल मोड रिस्पॉन्स: आपका यह फीचर बहुत ही शानदार है। बैकएंड सर्वर कनेक्ट होते ही यह पूरी तरह लाइव काम करने लगेगा। वर्तमान में मैं बिना इंटरनेट और बिना किसी एक्सटर्नल चाबी (API Key) के आपके फोन में सुरक्षित काम कर रहा हूँ।";
+                    responseBox.innerText = "❌ माफ़ कीजिये, सर्वर अभी थोड़ा व्यस्त है। कृपया 2 सेकंड बाद दोबारा प्रयास करें।";
                 }
-
-                responseBox.innerText = reply;
-            }, 600); // छोटा सा डिले ताकि लगे एआई सोच रहा है
+            } catch (error) {
+                responseBox.innerText = "❌ इंटरनेट कनेक्शन में कुछ समस्या है या सर्वर रिस्पॉन्स नहीं कर रहा है। कृपया दोबारा जांचें।";
+                console.error(error);
+            }
         }
     </script>
 </body>
