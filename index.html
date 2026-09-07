@@ -29,19 +29,22 @@
 
         <div class="main-content" id="mainContent">
             <div class="welcome-text" id="welcomeSection">
-                <p style="color: #fff; font-weight: bold; font-size: 15px; margin-bottom: 5px;">सुलभ कुमार का असली महा-बुद्धिमान एआई</p>
-                <p>यहाँ कुछ भी पूछें, बिना किसी फालतू सुझाव के सीधे असली जवाब मिलेगा!</p>
+                <p style="color: #fff; font-weight: bold; font-size: 15px; margin-bottom: 5px;">सुलभ कुमार का असली 100% लाइव एआई</p>
+                <p>यहाँ दुनिया का कोई भी सवाल पूछें, सीधे असली जवाब मिलेगा!</p>
             </div>
             <div class="chat-response" id="aiResponse"></div>
         </div>
 
         <div class="input-container">
-            <input type="text" class="prompt-input" id="userInput" placeholder="यहाँ अपना सवाल लिखें...">
+            <input type="text" class="prompt-input" id="userInput" placeholder="यहाँ कोई भी सवाल लिखें...">
             <button class="send-btn" onclick="askDesiAI()">➔</button>
         </div>
     </div>
 
     <script>
+        // ⚠️ यहाँ उद्धरण चिह्नों "" के बीच में अपनी असली Gemini API Key पेस्ट करें
+        const GEMINI_API_KEY = "यहाँ_अपनी_API_KEY_पेस्ट_करें";
+
         async function askDesiAI() {
             const inputField = document.getElementById('userInput');
             const responseBox = document.getElementById('aiResponse');
@@ -50,7 +53,6 @@
 
             if (!prompt) return;
 
-            // स्क्रीन साफ करना
             welcome.style.display = 'none';
             responseBox.style.display = 'block';
             responseBox.innerText = "🤖 DesiAI सोच रहा है...";
@@ -58,7 +60,7 @@
 
             let lowerPrompt = prompt.toLowerCase();
 
-            // 1. निर्माता नियम (यह हमेशा सुलभ जी का नाम सबसे पहले और बिना इंटरनेट रुकावट के तुरंत बताएगा)
+            // निर्माता नियम (यह बिना सर्वर के तुरंत गर्व से आपका नाम बताएगा)
             if (lowerPrompt.includes('बनाया') || lowerPrompt.includes('निर्माता') || lowerPrompt.includes('मालिक') || lowerPrompt.includes('creator') || lowerPrompt.includes('who made you')) {
                 setTimeout(() => {
                     responseBox.innerText = "🥇 मुझे गर्व है कि मुझे महान भारतीय डेवलपर सुलभ कुमार जी ने बनाया है! मैं पूरी तरह से सुलभ जी का ही एआई (DesiAI) हूँ।";
@@ -66,47 +68,25 @@
                 return;
             }
 
-            // 2. असली लाइव अनब्लॉक गेटवे (DuckDuckGo AI Proxy जो CORS को बायपास करता है)
+            // असली गूगल जेमिनी सर्वर कनेक्शन (कोई फिक्स शायरी या फिक्स गणित का बकवास ड्रामा नहीं)
             try {
-                // यह गेटवे कभी ब्लॉक नहीं होता और सीधे असली एआई मॉडल (Llama/Qwen) से कनेक्ट करता है
-                const response = await fetch('https://duckduckgo.com', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                const response = await fetch(`https://googleapis.com{GEMINI_API_KEY}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        model: 'meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo',
-                        messages: [
-                            { role: 'system', content: 'यूजर के हर सवाल का बिना कोई फालतू बात या बिना कोई सुझाव दिए, सीधे और सिर्फ सटीक उत्तर दें। यदि यूजर शायरी मांगे तो सिर्फ एक सुंदर हिंदी शायरी लिख कर दें, कोई अतिरिक्त टेक्स्ट या फालतू सुझाव न लिखें।' },
-                            { role: 'user', content: prompt }
-                        ]
+                        contents: [{ parts: [{ text: prompt + " (निर्देश: यूजर के सवाल का बिना कोई फालतू बात या सुझाव दिए, सीधे और सिर्फ सटीक उत्तर दें। यदि यूजर शायरी मांगे तो तुरंत एक नई सुंदर हिंदी शायरी लिख कर दें, कोई अतिरिक्त टेक्स्ट न लिखें।)" }] }]
                     })
                 });
 
-                // अगर यह मुख्य गेटवे काम कर गया, तो सीधा असली आंसर छपेगा
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data && data.choices && data.choices[0].message.content) {
-                        responseBox.innerText = data.choices[0].message.content.trim();
-                        return;
-                    }
+                const data = await response.json();
+                
+                if (data && data.candidates && data.candidates[0].content.parts[0].text) {
+                    responseBox.innerText = data.candidates[0].content.parts[0].text.trim();
+                } else {
+                    responseBox.innerText = "🤖 कृपया कोड की लाइन 115 में अपनी सही Gemini API Key पेस्ट करें।";
                 }
-                throw new Error();
             } catch (error) {
-                // 3. अल्टीमेट बैकअप - अगर ऊपर का एडवांस कनेक्शन भी ब्लॉक हो, तो सीधे वेब सर्च से डायरेक्ट आंसर निकालो
-                try {
-                    const webResponse = await fetch(`https://duckduckgo.com{encodeURIComponent(prompt)}&format=json&no_html=1`);
-                    const webData = await webResponse.json();
-                    
-                    if (webData && webData.AbstractText) {
-                        responseBox.innerText = webData.AbstractText;
-                    } else if (webData && webData.RelatedTopics && webData.RelatedTopics.length > 0 && webData.RelatedTopics[0].Text) {
-                        responseBox.innerText = webData.RelatedTopics[0].Text;
-                    } else {
-                        // अगर कुछ भी काम न करे, तो यह सुंदर रिस्पॉन्स बिना किसी एरर टेक्स्ट के सीधा आंसर देगा
-                        responseBox.innerText = "👑 सुलभ जी, आपका सवाल मिल गया है। मोबाइल सुरक्षा प्रोटोकॉल के कारण लाइव टेक्स्ट स्ट्रीम रुकी है, लेकिन आपके द्वारा पूछे गए सवाल का गणितीय और तार्किक आधार पूरी तरह से सक्रिय है।";
-                    }
-                } catch (webError) {
-                    responseBox.innerText = "✨ सुलभ कुमार जी का DesiAI एक्टिव है। कृपया नेटवर्क रीसेट करके दोबारा प्रयास करें।";
-                }
+                responseBox.innerText = 
             }
         }
     </script>
