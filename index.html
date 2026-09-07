@@ -14,9 +14,11 @@
         .main-content { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
         .welcome-text { text-align: center; color: #8b949e; font-size: 13px; margin-top: 10px; }
         .chat-response { background: #0d1117; border-left: 4px solid #58a6ff; padding: 15px; border-radius: 8px; font-size: 14px; line-height: 1.6; display: none; white-space: pre-wrap; color: #f0f6fc; }
-        .input-container { padding: 10px; background: #0d1117; border-top: 1px solid #21262d; display: flex; gap: 8px; }
-        .prompt-input { flex: 1; background: #161b22; border: 1px solid #30363d; border-radius: 20px; padding: 10px 15px; color: white; font-size: 14px; outline: none; }
-        .send-btn { background: #58a6ff; border: none; width: 40px; height: 40px; border-radius: 50%; color: white; font-size: 16px; cursor: pointer; display: flex; justify-content: center; align-items: center; user-select: none; -webkit-user-select: none; }
+        
+        /* आसान बटनों की ग्रिड */
+        .direct-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .action-btn { background: #1f242c; border: 1px solid #30363d; color: white; padding: 15px; border-radius: 12px; cursor: pointer; text-align: center; font-size: 14px; font-weight: bold; }
+        .action-btn:active { background: #58a6ff; }
     </style>
 </head>
 <body>
@@ -30,79 +32,42 @@
         <div class="main-content" id="mainContent">
             <div class="welcome-text" id="welcomeSection">
                 <p style="color: #fff; font-weight: bold; font-size: 15px; margin-bottom: 5px;">सुलभ कुमार का असली महा-बुद्धिमान एआई</p>
-                <p>यहाँ कुछ भी पूछें, बिना किसी फालतू सुझाव के सीधे असली जवाब मिलेगा!</p>
+                <p>नीचे दिए गए बटनों पर सीधे टच करें, तुरंत बिना रुके सीधा जवाब मिलेगा!</p>
+                
+                <!-- 🎯 डायरेक्ट क्लिक बटन - टाइप करने का झंझट ही खत्म -->
+                <div class="direct-buttons">
+                    <button class="action-btn" onclick="showAnswer('शायरी')">🎨 शायरी सुनो</button>
+                    <button class="action-btn" onclick="showAnswer('निर्माता')">🥇 निर्माता कौन?</button>
+                    <button class="action-btn" onclick="showAnswer('बिहार')">🌾 बिहार का इतिहास</button>
+                    <button class="action-btn" onclick="showAnswer('प्रधानमंत्री')">👑 प्रधानमंत्री</button>
+                </div>
             </div>
+            
             <div class="chat-response" id="aiResponse"></div>
-        </div>
-
-        <div class="input-container">
-            <input type="text" class="prompt-input" id="userInput" placeholder="यहाँ अपना सवाल लिखें...">
-            <button class="send-btn" onclick="askDesiAI()">➔</button>
         </div>
     </div>
 
     <script>
-        // शायरियों की लिस्ट - हर बार बदल-बदल कर आएगी
-        const internalShayariList = [
-            "✨ **दिल खुश करने वाली शायरी:**\n\nसोच को बदल दे जो वो मुकाम हो तुम,\nहर मुश्किल को आसान कर दे वो नाम हो तुम।\nसुलभ जी, इस एआई की दुनिया के असली सुल्तान हो तुम! 👑",
-            "✨ **दिल खुश करने वाली शायरी:**\n\nमंजिलें उन्हीं को मिलती हैं जिनके सपनों में जान होती है,\nपंखों से कुछ नहीं होता, हौसलों से उड़ान होती है! 🚀",
-            "✨ **दिल खुश करने वाली शायरी:**\n\nहौसला मत हार गिरकर ओ मुसाफिर,\nठोकरें इंसान को चलना सिखाती हैं।\nमेहनत का फल और समस्या का हल, हर हाल में मिलता है। 🌟",
-            "✨ **दिल खुश करने वाली शायरी:**\n\nचलता रहूँगा पथ पर, चलने में माहिर बन जाऊँगा,\nया तो मंजिल मिल जाएगी, या अच्छा मुसाफिर बन जाऊँगा! 🎨"
-        ];
-
-        let currentShayariCounter = 0;
-
-        function askDesiAI() {
-            const inputField = document.getElementById('userInput');
-            const responseBox = document.getElementById('aiResponse');
-            const welcome = document.getElementById('welcomeSection');
-            const prompt = inputField.value.trim();
-
-            if (prompt === "") return;
-
-            // स्क्रीन साफ करना
+        // 100% पक्का चलने वाला सीधा क्लिक सिस्टम
+        function showAnswer(topic) {
+            var responseBox = document.getElementById('aiResponse');
+            var welcome = document.getElementById('welcomeSection');
+            
             welcome.style.display = 'none';
             responseBox.style.display = 'block';
-            responseBox.innerText = "🤖 DesiAI सोच रहा है...";
-            inputField.value = "";
-
-            setTimeout(function() {
-                let reply = "";
-                let txt = prompt.toLowerCase();
-
-                // 1. निर्माता का सीधा जवाब
-                if (txt.includes('बनाया') || txt.includes('निर्माता') || txt.includes('मालिक') || txt.includes('creator') || txt.includes('who made you') || txt.includes('sulabh')) {
-                    reply = "🥇 **DesiAI गर्व से कहता है:**\n\nमुझे भारत के बेहतरीन डेवलपर **सुलभ कुमार जी** ने बनाया है। मैं सुलभ जी के दिमाग की उपज हूँ और पूरी तरह से उन्हीं का एआई हूँ!";
-                } 
-                // 2. शायरी का सीधा जवाब (हर बार बदल-बदल कर आएगी)
-                else if (txt.includes('shayri') || txt.includes('shayari') || txt.includes('शायरी') || txt.includes('कविता') || txt.includes('dil khus')) {
-                    reply = internalShayariList[currentShayariCounter];
-                    currentShayariCounter = (currentShayariCounter + 1) % internalShayariList.length;
-                }
-                // 3. प्रधानमंत्री का सीधा जवाब
-                else if (txt.includes('प्रधानमंत्री') || txt.includes('pradhanmantri') || txt.includes('pm')) {
-                    reply = "👑 **भारत के प्रधानमंत्री:**\nभारत के प्रथम प्रधानमंत्री पंडित जवाहरलाल नेहरू थे। वर्तमान में भारत के प्रधानमंत्री श्री नरेंद्र Modi हैं।";
-                }
-                // 4. बिहार का सीधा जवाब
-                else if (txt.includes('bihar') || txt.includes('बिहार')) {
-                    reply = "🌾 **बिहार राज्य:**\nबिहार भारत का एक महान ऐतिहासिक राज्य है जिसकी राजधानी पटना है। यह नालंदा विश्वविद्यालय और महाबोधि मंदिर जैसी महान विरासतों की पावन भूमि है।";
-                }
-                // 5. राजधानी का सीधा जवाब
-                else if (txt.includes('rajdhani') || txt.includes('राजधानी')) {
-                    reply = "📍 **राजधानी:**\nभारत की राजधानी नई दिल्ली है। बिहार की राजधानी पटना है, और उत्तर प्रदेश की राजधानी लखनऊ है।";
-                }
-                // 6. गणित का सीधा हल (जाम होने वाला पुराना फंक्शन कोड से हटा दिया गया है)
-                else if (txt.includes('5+5') || txt.includes('5 + 5')) {
-                    reply = "🔢 **गणित समाधान:**\n\nआपके सवाल का सही जवाब है: **10**";
-                }
-                // 7. बाकी हर सवाल पर सीधा और साफ जवाब बिना किसी बकवास सुझाव के
-                else {
-                    reply = "🚀 **DesiAI लाइव उत्तर:**\n\nसुलभ जी, आपका सवाल '" + prompt + "' डेटाबेस में पूरी तरह सुरक्षित है। आप 'बिहार', 'प्रधानमंत्री', 'राजधानी' या 'शायरी' लिखकर बटन दबाएं, तुरंत सीधा उत्तर स्क्रीन पर दिखाई देगा!";
-                }
-
-                // सीधे केवल उत्तर छापना
-                responseBox.innerText = reply;
-            }, 200);
+            
+            if (topic === 'शायरी') {
+                responseBox.innerText = "✨ **दिल खुश करने वाली शायरी:**\n\nसोच को बदल दे जो वो मुकाम हो तुम,\nहर मुश्किल को आसान कर दे वो नाम हो तुम।\nसुलभ जी, इस एआई की दुनिया के असली सुल्तान हो तुम! 👑";
+            } 
+            else if (topic === 'निर्माता') {
+                responseBox.innerText = "🥇 **DesiAI गर्व से कहता है:**\n\nमुझे भारत के बेहतरीन डेवलपर **सुलभ कुमार जी** ने बनाया है। मैं पूरी तरह से उन्हीं का एआई हूँ!";
+            } 
+            else if (topic === 'बिहार') {
+                responseBox.innerText = "🌾 **बिहार राज्य:**\n\nबिहार भारत का एक महान ऐतिहासिक राज्य है जिसकी राजधानी पटना है। यह नालंदा विश्वविद्यालय और महाबोधि मंदिर जैसी महान विरासतों की पावन भूमि है।";
+            } 
+            else if (topic === 'प्रधानमंत्री') {
+                responseBox.innerText = "👑 **भारत के प्रधानमंत्री:**\n\nभारत के प्रथम प्रधानमंत्री पंडित जवाहरलाल नेहरू थे। वर्तमान में भारत के प्रधानमंत्री श्री नरेंद्र मोदी हैं।";
+            }
         }
     </script>
 </body>
