@@ -1,184 +1,90 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
 
-body {
-  font-family: Arial, sans-serif;
-  background: #101114;
-  color: white;
-  min-height: 100vh;
-}
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-.app {
-  width: 100%;
-  max-width: 850px;
-  margin: auto;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: #17181c;
-}
+  <title>Sulabh AI</title>
 
-header {
-  padding: 18px;
-  background: #202228;
-  border-bottom: 1px solid #30323a;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+  <link rel="stylesheet" href="style.css">
+</head>
 
-header h1 {
-  font-size: 24px;
-}
+<body>
 
-header p {
-  color: #a9acb5;
-  font-size: 13px;
-  margin-top: 5px;
-}
+  <div class="app">
 
-.small-btn {
-  border: none;
-  background: #30333c;
-  color: white;
-  padding: 9px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-}
+    <!-- HEADER -->
+    <header class="header">
 
-#chatBox {
-  flex: 1;
-  padding: 18px;
-  overflow-y: auto;
-}
+      <div>
+        <h1>🤖 Sulabh AI</h1>
 
-.message {
-  max-width: 85%;
-  padding: 13px 15px;
-  margin-bottom: 14px;
-  border-radius: 16px;
-  line-height: 1.5;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
+        <p>
+          AI Assistant • Created by Sulabh Kumar
+        </p>
+      </div>
 
-.message.ai {
-  background: #292c34;
-  margin-right: auto;
-}
+      <button id="clearBtn">
+        Clear
+      </button>
 
-.message.user {
-  background: #315bea;
-  margin-left: auto;
-}
+    </header>
 
-.loading {
-  padding: 10px 18px;
-  color: #aaa;
-  font-size: 14px;
-}
 
-.loading span {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: #aaa;
-  border-radius: 50%;
-  margin-right: 4px;
-  animation: blink 1s infinite;
-}
+    <!-- CHAT AREA -->
+    <main id="chatBox">
 
-.loading span:nth-child(2) {
-  animation-delay: .2s;
-}
+      <div class="message ai">
+        नमस्ते! 👋
+        मैं Sulabh AI हूँ।
 
-.loading span:nth-child(3) {
-  animation-delay: .4s;
-}
+        आप मुझसे कुछ भी पूछ सकते हैं।
+      </div>
 
-@keyframes blink {
-  0%, 100% {
-    opacity: .2;
-  }
-  50% {
-    opacity: 1;
-  }
-}
+    </main>
 
-.hidden {
-  display: none;
-}
 
-#chatForm {
-  display: flex;
-  gap: 10px;
-  padding: 12px;
-  background: #202228;
-  border-top: 1px solid #30323a;
-}
+    <!-- LOADING -->
+    <div
+      id="loading"
+      class="loading hidden"
+    >
+      AI सोच रहा है...
+    </div>
 
-#prompt {
-  flex: 1;
-  resize: none;
-  border: 1px solid #383b45;
-  outline: none;
-  border-radius: 14px;
-  padding: 13px;
-  background: #111216;
-  color: white;
-  font-size: 16px;
-  min-height: 48px;
-  max-height: 130px;
-}
 
-#sendBtn {
-  border: none;
-  border-radius: 14px;
-  padding: 0 18px;
-  background: #315bea;
-  color: white;
-  font-size: 15px;
-  cursor: pointer;
-  min-width: 75px;
-}
+    <!-- INPUT -->
+    <form id="chatForm">
 
-#sendBtn:disabled {
-  opacity: .5;
-  cursor: not-allowed;
-}
+      <textarea
+        id="prompt"
+        placeholder="अपना सवाल लिखें..."
+        required
+      ></textarea>
 
-footer {
-  text-align: center;
-  color: #777b85;
-  font-size: 12px;
-  padding: 10px;
-}
+      <button
+        id="sendBtn"
+        type="submit"
+      >
+        ➤
+      </button>
 
-@media (max-width: 600px) {
-  header {
-    padding: 14px;
-  }
+    </form>
 
-  header h1 {
-    font-size: 20px;
-  }
 
-  #chatBox {
-    padding: 12px;
-  }
+    <!-- FOOTER -->
+    <footer>
+      © 2026 Sulabh Kumar
+    </footer>
 
-  .message {
-    max-width: 92%;
-  }
+  </div>
 
-  #chatForm {
-    padding: 9px;
-  }
 
-  #sendBtn {
-    padding: 0 14px;
-  }
-}
+  <script src="script.js"></script>
+
+</body>
+</html>
